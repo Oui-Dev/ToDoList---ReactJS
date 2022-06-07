@@ -45,6 +45,6 @@
         ]
     },
     "lint-staged": {
-        "*.{js,jsx,css,json,md,txt}": "prettier --write --ignore-unknown ."
+        "*.{js,jsx,css,json}": "prettier --write --ignore-unknown ."
     }
 }
