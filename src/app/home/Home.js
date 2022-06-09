@@ -3,9 +3,15 @@ import { useState, useRef } from 'react'
 
 export default function Home() {
     const dragItem = useRef()
-    const [todoList, setTodoList] = useState(JSON.parse(localStorage.getItem('todoList')))
-    const [doingList, setDoingList] = useState(JSON.parse(localStorage.getItem('doingList')))
-    const [doneList, setDoneList] = useState(JSON.parse(localStorage.getItem('doneList')))
+    const [todoList, setTodoList] = useState([])
+    const [doingList, setDoingList] = useState([])
+    const [doneList, setDoneList] = useState([])
+    if (localStorage.getItem('todoList') && todoList.length === 0)
+        setTodoList(JSON.parse(localStorage.getItem('todoList')))
+    if (localStorage.getItem('doingList') && doingList.length === 0)
+        setDoingList(JSON.parse(localStorage.getItem('doingList')))
+    if (localStorage.getItem('doneList') && doneList.length === 0)
+        setDoneList(JSON.parse(localStorage.getItem('doneList')))
 
     function onDrag(list, i) {
         dragItem.index = i
@@ -53,6 +59,24 @@ export default function Home() {
                 console.log('Error')
         }
     }
+    function addTodo() {
+        const newItem = document.querySelector('#todo input').value.trim()
+        localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
+        document.querySelector('#todo input').value = ''
+        setTodoList([...todoList, newItem])
+    }
+    function addDoing() {
+        const newItem = document.querySelector('#doing input').value.trim()
+        localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
+        document.querySelector('#doing input').value = ''
+        setDoingList([...doingList, newItem])
+    }
+    function addDone() {
+        const newItem = document.querySelector('#done input').value.trim()
+        localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
+        document.querySelector('#done input').value = ''
+        setDoneList([...doneList, newItem])
+    }
 
     return (
         <div className="homeContent">
@@ -66,10 +90,10 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
-                <button type="button">
-                    <box-icon name="plus" color="white" />
-                    <p>Ajouter</p>
-                </button>
+                <div className="boxFooter">
+                    <input type="text"></input>
+                    <box-icon name="plus" color="white" onClick={addTodo} />
+                </div>
             </div>
             <div id="doing" className="itemBox">
                 <h3>Doing</h3>
@@ -81,10 +105,10 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
-                <button type="button">
-                    <box-icon name="plus" color="white" />
-                    <p>Ajouter</p>
-                </button>
+                <div className="boxFooter">
+                    <input type="text"></input>
+                    <box-icon name="plus" color="white" onClick={addDoing} />
+                </div>
             </div>
             <div id="done" className="itemBox">
                 <h3>Done</h3>
@@ -96,10 +120,10 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
-                <button type="button">
-                    <box-icon name="plus" color="white" />
-                    <p>Ajouter</p>
-                </button>
+                <div className="boxFooter">
+                    <input type="text"></input>
+                    <box-icon name="plus" color="white" onClick={addDone} />
+                </div>
             </div>
         </div>
     )
