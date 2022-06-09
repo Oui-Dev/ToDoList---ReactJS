@@ -1,4 +1,4 @@
-import './Home.css'
+import './Home.scss'
 import React, { useState, useRef } from 'react'
 
 export default function Home() {

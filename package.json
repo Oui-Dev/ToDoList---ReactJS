@@ -18,6 +18,7 @@
         "lint-staged": "^13.0.0",
         "postcss": "^8.4.14",
         "prettier": "2.6.2",
+        "sass": "^1.52.3",
         "tailwindcss": "^3.0.24"
     },
     "scripts": {
@@ -46,6 +47,6 @@
         ]
     },
     "lint-staged": {
-        "*.{js,jsx,css,html,json}": "prettier --write --ignore-unknown ."
+        "*.{js,jsx,css,scss,html,json}": "prettier --write --ignore-unknown ."
     }
 }
