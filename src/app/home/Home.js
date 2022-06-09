@@ -9,23 +9,11 @@ export default function Home() {
 
     // localStorage.clear()
 
-    if (
-        localStorage.getItem('todoList') &&
-        JSON.parse(localStorage.getItem('todoList')).length > 0 &&
-        todoList.length === 0
-    )
+    if (localStorage.getItem('todoList') && JSON.parse(localStorage.getItem('todoList')).length > 0 && todoList.length === 0)
         setTodoList(JSON.parse(localStorage.getItem('todoList')))
-    if (
-        localStorage.getItem('doingList') &&
-        JSON.parse(localStorage.getItem('doingList')).length > 0 &&
-        doingList.length === 0
-    )
+    if (localStorage.getItem('doingList') && JSON.parse(localStorage.getItem('doingList')).length > 0 && doingList.length === 0)
         setDoingList(JSON.parse(localStorage.getItem('doingList')))
-    if (
-        localStorage.getItem('doneList') &&
-        JSON.parse(localStorage.getItem('doneList')).length > 0 &&
-        doneList.length === 0
-    )
+    if (localStorage.getItem('doneList') && JSON.parse(localStorage.getItem('doneList')).length > 0 && doneList.length === 0)
         setDoneList(JSON.parse(localStorage.getItem('doneList')))
 
     console.table(todoList)
