@@ -6,31 +6,48 @@ export default function Home() {
     const [todoList, setTodoList] = useState([])
     const [doingList, setDoingList] = useState([])
     const [doneList, setDoneList] = useState([])
-    if (localStorage.getItem('todoList') && todoList.length === 0)
+
+    // localStorage.clear()
+
+    if (
+        localStorage.getItem('todoList') &&
+        JSON.parse(localStorage.getItem('todoList')).length > 0 &&
+        todoList.length === 0
+    )
         setTodoList(JSON.parse(localStorage.getItem('todoList')))
-    if (localStorage.getItem('doingList') && doingList.length === 0)
+    if (
+        localStorage.getItem('doingList') &&
+        JSON.parse(localStorage.getItem('doingList')).length > 0 &&
+        doingList.length === 0
+    )
         setDoingList(JSON.parse(localStorage.getItem('doingList')))
-    if (localStorage.getItem('doneList') && doneList.length === 0)
+    if (
+        localStorage.getItem('doneList') &&
+        JSON.parse(localStorage.getItem('doneList')).length > 0 &&
+        doneList.length === 0
+    )
         setDoneList(JSON.parse(localStorage.getItem('doneList')))
 
-    function onDrag(list, i) {
-        dragItem.index = i
+    console.table(todoList)
+    console.table(doingList)
+    console.table(doneList)
 
+    function onDrag(list, i) {
         switch (list) {
             case 1:
-                dragItem.array = [...todoList]
+                dragItem.current = todoList[i]
                 todoList.splice(i, 1)
-                setTodoList(todoList)
+                localStorage.setItem('todoList', JSON.stringify(todoList))
                 break
             case 2:
-                dragItem.array = [...doingList]
+                dragItem.current = doingList[i]
                 doingList.splice(i, 1)
-                setDoingList(doingList)
+                localStorage.setItem('doingList', JSON.stringify(doingList))
                 break
             case 3:
-                dragItem.array = [...doneList]
+                dragItem.current = doneList[i]
                 doneList.splice(i, 1)
-                setDoneList(doneList)
+                localStorage.setItem('doneList', JSON.stringify(doneList))
                 break
             default:
                 console.log('Error')
@@ -40,7 +57,7 @@ export default function Home() {
         e.preventDefault()
     }
     function onDrop(list) {
-        const item = dragItem.array[dragItem.index]
+        const item = dragItem.current
 
         switch (list) {
             case 1:
@@ -59,28 +76,27 @@ export default function Home() {
                 console.log('Error')
         }
     }
-    function addTodo(e) {
+
+    function addTask(e, list) {
         const newItem = e.target.previousElementSibling.value.trim()
         if (newItem !== '') {
-            localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
             e.target.previousElementSibling.value = ''
-            setTodoList([...todoList, newItem])
-        }
-    }
-    function addDoing(e) {
-        const newItem = e.target.previousElementSibling.value.trim()
-        if (newItem !== '') {
-            localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
-            e.target.previousElementSibling.value = ''
-            setDoingList([...doingList, newItem])
-        }
-    }
-    function addDone(e) {
-        const newItem = e.target.previousElementSibling.value.trim()
-        if (newItem !== '') {
-            localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
-            e.target.previousElementSibling.value = ''
-            setDoneList([...doneList, newItem])
+            switch (list) {
+                case 1:
+                    localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
+                    setTodoList([...todoList, newItem])
+                    break
+                case 2:
+                    localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
+                    setDoingList([...doingList, newItem])
+                    break
+                case 3:
+                    localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
+                    setDoneList([...doneList, newItem])
+                    break
+                default:
+                    console.log('Error')
+            }
         }
     }
 
@@ -98,7 +114,7 @@ export default function Home() {
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={addTodo} />
+                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 1)} />
                 </div>
             </div>
             <div id="doing" className="itemBox">
@@ -113,7 +129,7 @@ export default function Home() {
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={addDoing} />
+                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 2)} />
                 </div>
             </div>
             <div id="done" className="itemBox">
@@ -128,7 +144,7 @@ export default function Home() {
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={addDone} />
+                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 3)} />
                 </div>
             </div>
         </div>
