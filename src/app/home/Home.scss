@@ -1,15 +1,13 @@
 .homeContent {
     display: flex;
-    flex-direction: row;
-    gap: 5%;
-    padding: 30px 60px;
+    @apply flex-col py-4 px-8 gap-4 md:flex-row lg:py-8 lg:px-16 lg:gap-10;
 }
 
 .itemBox {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: 30%;
+    width: 100%;
     min-height: 50vh;
     border-radius: 5px;
     background-color: #282c34;
@@ -24,5 +22,12 @@
     & .item {
         padding: 4px 0;
         width: 100%;
+    }
+    & button {
+        display: flex;
+        justify-content: center;
+        gap: 2%;
+        padding: 10px;
+        border-top: 1px solid rgb(190, 190, 190);
     }
 }

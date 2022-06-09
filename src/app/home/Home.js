@@ -58,7 +58,7 @@ export default function Home() {
         <div className="homeContent">
             <div id="todo" className="itemBox">
                 <h3>ToDo</h3>
-                <div className="h-full" onDrop={() => onDrop(1)} onDragOver={(e) => onDragOver(e)}>
+                <div className="flex-grow" onDrop={() => onDrop(1)} onDragOver={(e) => onDragOver(e)}>
                     {todoList &&
                         todoList.map((item, index) => (
                             <div className="item" onDragStart={() => onDrag(1, index)} key={index} draggable>
@@ -66,10 +66,14 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
+                <button type="button">
+                    <box-icon name="plus" color="white" />
+                    <p>Ajouter</p>
+                </button>
             </div>
             <div id="doing" className="itemBox">
                 <h3>Doing</h3>
-                <div className="h-full" onDrop={() => onDrop(2)} onDragOver={(e) => onDragOver(e)}>
+                <div className="flex-grow" onDrop={() => onDrop(2)} onDragOver={(e) => onDragOver(e)}>
                     {doingList &&
                         doingList.map((item, index) => (
                             <div className="item" onDragStart={() => onDrag(2, index)} key={index} draggable>
@@ -77,10 +81,14 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
+                <button type="button">
+                    <box-icon name="plus" color="white" />
+                    <p>Ajouter</p>
+                </button>
             </div>
             <div id="done" className="itemBox">
                 <h3>Done</h3>
-                <div className="h-full" onDrop={() => onDrop(3)} onDragOver={(e) => onDragOver(e)}>
+                <div className="flex-grow" onDrop={() => onDrop(3)} onDragOver={(e) => onDragOver(e)}>
                     {doneList &&
                         doneList.map((item, index) => (
                             <div className="item" onDragStart={() => onDrag(3, index)} key={index} draggable>
@@ -88,6 +96,10 @@ export default function Home() {
                             </div>
                         ))}
                 </div>
+                <button type="button">
+                    <box-icon name="plus" color="white" />
+                    <p>Ajouter</p>
+                </button>
             </div>
         </div>
     )
