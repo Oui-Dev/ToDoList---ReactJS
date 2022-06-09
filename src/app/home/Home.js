@@ -59,23 +59,29 @@ export default function Home() {
                 console.log('Error')
         }
     }
-    function addTodo() {
-        const newItem = document.querySelector('#todo input').value.trim()
-        localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
-        document.querySelector('#todo input').value = ''
-        setTodoList([...todoList, newItem])
+    function addTodo(e) {
+        const newItem = e.target.previousElementSibling.value.trim()
+        if (newItem !== '') {
+            localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
+            e.target.previousElementSibling.value = ''
+            setTodoList([...todoList, newItem])
+        }
     }
-    function addDoing() {
-        const newItem = document.querySelector('#doing input').value.trim()
-        localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
-        document.querySelector('#doing input').value = ''
-        setDoingList([...doingList, newItem])
+    function addDoing(e) {
+        const newItem = e.target.previousElementSibling.value.trim()
+        if (newItem !== '') {
+            localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
+            e.target.previousElementSibling.value = ''
+            setDoingList([...doingList, newItem])
+        }
     }
-    function addDone() {
-        const newItem = document.querySelector('#done input').value.trim()
-        localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
-        document.querySelector('#done input').value = ''
-        setDoneList([...doneList, newItem])
+    function addDone(e) {
+        const newItem = e.target.previousElementSibling.value.trim()
+        if (newItem !== '') {
+            localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
+            e.target.previousElementSibling.value = ''
+            setDoneList([...doneList, newItem])
+        }
     }
 
     return (
