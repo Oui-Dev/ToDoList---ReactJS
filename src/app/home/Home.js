@@ -53,9 +53,46 @@ export default function Home() {
         e.preventDefault()
     }
 
+    const ItemBox = ({title, list}) => {
+        return (
+            <div className="itemBox">
+                <h3>{title}</h3>
+                <div
+                    className="flex-grow"
+                    onDrop={() => dispatch({type: 'onDrop', list: list})}
+                    onDragOver={(e) => onDragOver(e)}>
+                    {todoList[list] &&
+                        todoList[list].map((item, index) => (
+                            <div
+                                className="item"
+                                onDragStart={() => dispatch({type: 'onDrag', list: list, index: index, item: item})}
+                                key={index}
+                                draggable>
+                                {item}
+                                <i
+                                    className="bx bx-trash"
+                                    onClick={() => dispatch({type: 'rem', list: list, index: index})}
+                                />
+                            </div>
+                        ))}
+                </div>
+                <div className="boxFooter">
+                    <input type="text"></input>
+                    <i
+                        className="bx bx-plus"
+                        onClick={(e) => dispatch({type: 'add', list: list, input: e.target.previousElementSibling})}
+                    />
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="homeContent">
-            <div id="todo" className="itemBox">
+            <ItemBox title="ToDo" list="todo" />
+            <ItemBox title="Doing" list="doing" />
+            <ItemBox title="Done" list="done" />
+            {/* <div id="todo" className="itemBox">
                 <h3>ToDo</h3>
                 <div
                     className="flex-grow"
@@ -83,8 +120,8 @@ export default function Home() {
                         onClick={(e) => dispatch({type: 'add', list: 'todo', input: e.target.previousElementSibling})}
                     />
                 </div>
-            </div>
-            <div id="doing" className="itemBox">
+            </div> */}
+            {/* <div id="doing" className="itemBox">
                 <h3>Doing</h3>
                 <div
                     className="flex-grow"
@@ -112,8 +149,8 @@ export default function Home() {
                         onClick={(e) => dispatch({type: 'add', list: 'doing', input: e.target.previousElementSibling})}
                     />
                 </div>
-            </div>
-            <div id="done" className="itemBox">
+            </div> */}
+            {/* <div id="done" className="itemBox">
                 <h3>Done</h3>
                 <div
                     className="flex-grow"
@@ -141,7 +178,7 @@ export default function Home() {
                         onClick={(e) => dispatch({type: 'add', list: 'done', input: e.target.previousElementSibling})}
                     />
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
