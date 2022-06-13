@@ -1,138 +1,140 @@
 import './Home.scss'
-import { useState, useRef } from 'react'
+import { useRef, useEffect, useReducer } from 'react'
+let isStarting = true
 
 export default function Home() {
-    const dragItem = useRef()
-    const [todoList, setTodoList] = useState([])
-    const [doingList, setDoingList] = useState([])
-    const [doneList, setDoneList] = useState([])
-
     // localStorage.clear()
+    const dragItem = useRef()
+    const initialState = {}
+    const [todoList, dispatch] = useReducer(reducer, initialState)
 
-    if (localStorage.getItem('todoList') && JSON.parse(localStorage.getItem('todoList')).length > 0 && todoList.length === 0)
-        setTodoList(JSON.parse(localStorage.getItem('todoList')))
-    if (localStorage.getItem('doingList') && JSON.parse(localStorage.getItem('doingList')).length > 0 && doingList.length === 0)
-        setDoingList(JSON.parse(localStorage.getItem('doingList')))
-    if (localStorage.getItem('doneList') && JSON.parse(localStorage.getItem('doneList')).length > 0 && doneList.length === 0)
-        setDoneList(JSON.parse(localStorage.getItem('doneList')))
-
-    console.table(todoList)
-    console.table(doingList)
-    console.table(doneList)
-
-    function onDrag(list, i) {
-        switch (list) {
-            case 1:
-                dragItem.current = todoList[i]
-                todoList.splice(i, 1)
-                localStorage.setItem('todoList', JSON.stringify(todoList))
-                break
-            case 2:
-                dragItem.current = doingList[i]
-                doingList.splice(i, 1)
-                localStorage.setItem('doingList', JSON.stringify(doingList))
-                break
-            case 3:
-                dragItem.current = doneList[i]
-                doneList.splice(i, 1)
-                localStorage.setItem('doneList', JSON.stringify(doneList))
-                break
-            default:
-                console.log('Error')
-        }
-    }
-    function onDragOver(e) {
-        e.preventDefault()
-    }
-    function onDrop(list) {
-        const item = dragItem.current
-
-        switch (list) {
-            case 1:
-                localStorage.setItem('todoList', JSON.stringify([...todoList, item]))
-                setTodoList([...todoList, item])
-                break
-            case 2:
-                localStorage.setItem('doingList', JSON.stringify([...doingList, item]))
-                setDoingList([...doingList, item])
-                break
-            case 3:
-                localStorage.setItem('doneList', JSON.stringify([...doneList, item]))
-                setDoneList([...doneList, item])
-                break
-            default:
-                console.log('Error')
-        }
-    }
-
-    function addTask(e, list) {
-        const newItem = e.target.previousElementSibling.value.trim()
-        if (newItem !== '') {
-            e.target.previousElementSibling.value = ''
-            switch (list) {
-                case 1:
-                    localStorage.setItem('todoList', JSON.stringify([...todoList, newItem]))
-                    setTodoList([...todoList, newItem])
-                    break
-                case 2:
-                    localStorage.setItem('doingList', JSON.stringify([...doingList, newItem]))
-                    setDoingList([...doingList, newItem])
-                    break
-                case 3:
-                    localStorage.setItem('doneList', JSON.stringify([...doneList, newItem]))
-                    setDoneList([...doneList, newItem])
-                    break
-                default:
-                    console.log('Error')
+    useEffect(() => {
+        if (isStarting) {
+            isStarting = false
+            if (
+                localStorage.getItem('todoList') &&
+                Object.keys(JSON.parse(localStorage.getItem('todoList'))).length > 0
+            ) {
+                const data = JSON.parse(localStorage.getItem('todoList'))
+                dispatch({ type: 'set', data: data })
             }
         }
+    })
+
+    function reducer(todoList, action) {
+        switch (action.type) {
+            case 'set':
+                todoList = action.data
+                break
+            case 'onDrag':
+                dragItem.current = action.item
+                todoList[action.list].splice(action.index, 1)
+                break
+            case 'onDrop':
+                todoList[action.list].push(dragItem.current)
+                break
+            case 'add':
+                const newItem = action.input.value.trim()
+                if (newItem !== '') {
+                    todoList[action.list].push(newItem)
+                    action.input.value = ''
+                }
+                break
+            default:
+                throw new Error()
+        }
+        localStorage.setItem('todoList', JSON.stringify(todoList))
+        return todoList
+    }
+
+    console.table(todoList)
+
+    function onDragOver(e) {
+        e.preventDefault()
     }
 
     return (
         <div className="homeContent">
             <div id="todo" className="itemBox">
                 <h3>ToDo</h3>
-                <div className="flex-grow" onDrop={() => onDrop(1)} onDragOver={(e) => onDragOver(e)}>
-                    {todoList &&
-                        todoList.map((item, index) => (
-                            <div className="item" onDragStart={() => onDrag(1, index)} key={index} draggable>
+                <div
+                    className="flex-grow"
+                    onDrop={() => dispatch({ type: 'onDrop', list: 'todo' })}
+                    onDragOver={(e) => onDragOver(e)}>
+                    {todoList.todo &&
+                        todoList.todo.map((item, index) => (
+                            <div
+                                className="item"
+                                onDragStart={() => dispatch({ type: 'onDrag', list: 'todo', index: index, item: item })}
+                                key={index}
+                                draggable>
                                 {item}
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 1)} />
+                    <box-icon
+                        name="plus"
+                        color="white"
+                        onClick={(e) => dispatch({ type: 'add', list: 'todo', input: e.target.previousElementSibling })}
+                    />
                 </div>
             </div>
             <div id="doing" className="itemBox">
                 <h3>Doing</h3>
-                <div className="flex-grow" onDrop={() => onDrop(2)} onDragOver={(e) => onDragOver(e)}>
-                    {doingList &&
-                        doingList.map((item, index) => (
-                            <div className="item" onDragStart={() => onDrag(2, index)} key={index} draggable>
+                <div
+                    className="flex-grow"
+                    onDrop={() => dispatch({ type: 'onDrop', list: 'doing' })}
+                    onDragOver={(e) => onDragOver(e)}>
+                    {todoList.doing &&
+                        todoList.doing.map((item, index) => (
+                            <div
+                                className="item"
+                                onDragStart={() =>
+                                    dispatch({ type: 'onDrag', list: 'doing', index: index, item: item })
+                                }
+                                key={index}
+                                draggable>
                                 {item}
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 2)} />
+                    <box-icon
+                        name="plus"
+                        color="white"
+                        onClick={(e) =>
+                            dispatch({ type: 'add', list: 'doing', input: e.target.previousElementSibling })
+                        }
+                    />
                 </div>
             </div>
             <div id="done" className="itemBox">
                 <h3>Done</h3>
-                <div className="flex-grow" onDrop={() => onDrop(3)} onDragOver={(e) => onDragOver(e)}>
-                    {doneList &&
-                        doneList.map((item, index) => (
-                            <div className="item" onDragStart={() => onDrag(3, index)} key={index} draggable>
+                <div
+                    className="flex-grow"
+                    onDrop={() => dispatch({ type: 'onDrop', list: 'done' })}
+                    onDragOver={(e) => onDragOver(e)}>
+                    {todoList.done &&
+                        todoList.done.map((item, index) => (
+                            <div
+                                className="item"
+                                onDragStart={() => dispatch({ type: 'onDrag', list: 'done', index: index, item: item })}
+                                key={index}
+                                draggable>
                                 {item}
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon name="plus" color="white" onClick={(e) => addTask(e, 3)} />
+                    <box-icon
+                        name="plus"
+                        color="white"
+                        onClick={(e) => dispatch({ type: 'add', list: 'done', input: e.target.previousElementSibling })}
+                    />
                 </div>
             </div>
         </div>
