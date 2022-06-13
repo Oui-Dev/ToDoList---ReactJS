@@ -11,10 +11,7 @@ export default function Home() {
     useEffect(() => {
         if (isStarting) {
             isStarting = false
-            if (
-                localStorage.getItem('todoList') &&
-                Object.keys(JSON.parse(localStorage.getItem('todoList'))).length > 0
-            ) {
+            if (localStorage.getItem('todoList')) {
                 const data = JSON.parse(localStorage.getItem('todoList'))
                 dispatch({type: 'set', data: data})
             }
@@ -39,6 +36,9 @@ export default function Home() {
                     todoList[action.list].push(newItem)
                     action.input.value = ''
                 }
+                break
+            case 'rem':
+                todoList[action.list].splice(action.index, 1)
                 break
             default:
                 throw new Error()
@@ -69,14 +69,17 @@ export default function Home() {
                                 key={index}
                                 draggable>
                                 {item}
+                                <i
+                                    class="bx bx-trash"
+                                    onClick={() => dispatch({type: 'rem', list: 'todo', index: index})}
+                                />
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon
-                        name="plus"
-                        color="white"
+                    <i
+                        className="bx bx-plus"
                         onClick={(e) => dispatch({type: 'add', list: 'todo', input: e.target.previousElementSibling})}
                     />
                 </div>
@@ -95,14 +98,17 @@ export default function Home() {
                                 key={index}
                                 draggable>
                                 {item}
+                                <i
+                                    class="bx bx-trash"
+                                    onClick={() => dispatch({type: 'rem', list: 'doing', index: index})}
+                                />
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon
-                        name="plus"
-                        color="white"
+                    <i
+                        className="bx bx-plus"
                         onClick={(e) => dispatch({type: 'add', list: 'doing', input: e.target.previousElementSibling})}
                     />
                 </div>
@@ -121,14 +127,17 @@ export default function Home() {
                                 key={index}
                                 draggable>
                                 {item}
+                                <i
+                                    class="bx bx-trash"
+                                    onClick={() => dispatch({type: 'rem', list: 'done', index: index})}
+                                />
                             </div>
                         ))}
                 </div>
                 <div className="boxFooter">
                     <input type="text"></input>
-                    <box-icon
-                        name="plus"
-                        color="white"
+                    <i
+                        className="bx bx-plus"
                         onClick={(e) => dispatch({type: 'add', list: 'done', input: e.target.previousElementSibling})}
                     />
                 </div>

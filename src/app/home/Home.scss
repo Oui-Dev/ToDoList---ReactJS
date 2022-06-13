@@ -20,8 +20,15 @@
         border-bottom: 1px solid rgb(190, 190, 190);
     }
     & .item {
+        position: relative;
         padding: 4px 0;
         width: 100%;
+        & i {
+            font-size: 20px;
+            position: absolute;
+            right: 10px;
+            top: 0;
+        }
     }
     & .boxFooter {
         display: flex;
@@ -36,8 +43,13 @@
             text-align: center;
             color: black;
         }
-        & box-icon {
-            cursor: pointer;
+        & i {
+            font-size: 25px;
         }
     }
+}
+
+i {
+    color: white;
+    cursor: pointer;
 }
