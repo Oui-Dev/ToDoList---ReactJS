@@ -5,7 +5,7 @@ let isStarting = true
 export default function Home() {
     // localStorage.clear()
     const dragItem = useRef()
-    const initialState = {}
+    const initialState = {todo: [], doing: [], done: []}
     const [todoList, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
