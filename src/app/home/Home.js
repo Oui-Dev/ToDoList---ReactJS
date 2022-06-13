@@ -1,5 +1,5 @@
 import './Home.scss'
-import { useRef, useEffect, useReducer } from 'react'
+import {useRef, useEffect, useReducer} from 'react'
 let isStarting = true
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
                 Object.keys(JSON.parse(localStorage.getItem('todoList'))).length > 0
             ) {
                 const data = JSON.parse(localStorage.getItem('todoList'))
-                dispatch({ type: 'set', data: data })
+                dispatch({type: 'set', data: data})
             }
         }
     })
@@ -59,13 +59,13 @@ export default function Home() {
                 <h3>ToDo</h3>
                 <div
                     className="flex-grow"
-                    onDrop={() => dispatch({ type: 'onDrop', list: 'todo' })}
+                    onDrop={() => dispatch({type: 'onDrop', list: 'todo'})}
                     onDragOver={(e) => onDragOver(e)}>
                     {todoList.todo &&
                         todoList.todo.map((item, index) => (
                             <div
                                 className="item"
-                                onDragStart={() => dispatch({ type: 'onDrag', list: 'todo', index: index, item: item })}
+                                onDragStart={() => dispatch({type: 'onDrag', list: 'todo', index: index, item: item})}
                                 key={index}
                                 draggable>
                                 {item}
@@ -77,7 +77,7 @@ export default function Home() {
                     <box-icon
                         name="plus"
                         color="white"
-                        onClick={(e) => dispatch({ type: 'add', list: 'todo', input: e.target.previousElementSibling })}
+                        onClick={(e) => dispatch({type: 'add', list: 'todo', input: e.target.previousElementSibling})}
                     />
                 </div>
             </div>
@@ -85,15 +85,13 @@ export default function Home() {
                 <h3>Doing</h3>
                 <div
                     className="flex-grow"
-                    onDrop={() => dispatch({ type: 'onDrop', list: 'doing' })}
+                    onDrop={() => dispatch({type: 'onDrop', list: 'doing'})}
                     onDragOver={(e) => onDragOver(e)}>
                     {todoList.doing &&
                         todoList.doing.map((item, index) => (
                             <div
                                 className="item"
-                                onDragStart={() =>
-                                    dispatch({ type: 'onDrag', list: 'doing', index: index, item: item })
-                                }
+                                onDragStart={() => dispatch({type: 'onDrag', list: 'doing', index: index, item: item})}
                                 key={index}
                                 draggable>
                                 {item}
@@ -105,9 +103,7 @@ export default function Home() {
                     <box-icon
                         name="plus"
                         color="white"
-                        onClick={(e) =>
-                            dispatch({ type: 'add', list: 'doing', input: e.target.previousElementSibling })
-                        }
+                        onClick={(e) => dispatch({type: 'add', list: 'doing', input: e.target.previousElementSibling})}
                     />
                 </div>
             </div>
@@ -115,13 +111,13 @@ export default function Home() {
                 <h3>Done</h3>
                 <div
                     className="flex-grow"
-                    onDrop={() => dispatch({ type: 'onDrop', list: 'done' })}
+                    onDrop={() => dispatch({type: 'onDrop', list: 'done'})}
                     onDragOver={(e) => onDragOver(e)}>
                     {todoList.done &&
                         todoList.done.map((item, index) => (
                             <div
                                 className="item"
-                                onDragStart={() => dispatch({ type: 'onDrag', list: 'done', index: index, item: item })}
+                                onDragStart={() => dispatch({type: 'onDrag', list: 'done', index: index, item: item})}
                                 key={index}
                                 draggable>
                                 {item}
@@ -133,7 +129,7 @@ export default function Home() {
                     <box-icon
                         name="plus"
                         color="white"
-                        onClick={(e) => dispatch({ type: 'add', list: 'done', input: e.target.previousElementSibling })}
+                        onClick={(e) => dispatch({type: 'add', list: 'done', input: e.target.previousElementSibling})}
                     />
                 </div>
             </div>
