@@ -1,11 +1,16 @@
 import './Home.scss'
 import {useRef, useEffect, useReducer} from 'react'
 let isStarting = true
+const initialState = {todo: [], doing: [], done: []}
+const KEY_SET = 'KEY_SET',
+    KEY_ONDRAG = 'KEY_ONDRAG',
+    KEY_ONDROP = 'KEY_ONDROP',
+    KEY_ADD = 'KEY_ADD',
+    KEY_REMOVE = 'KEY_REMOVE'
 
 export default function Home() {
     // localStorage.clear()
     const dragItem = useRef()
-    const initialState = {todo: [], doing: [], done: []}
     const [todoList, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
@@ -19,32 +24,42 @@ export default function Home() {
     })
 
     function reducer(todoList, action) {
+        let tmp, newState
         switch (action.type) {
-            case 'set':
-                todoList = action.data
+            case KEY_SET:
+                newState = {...todoList, ...action.data}
                 break
-            case 'onDrag':
+            case KEY_ONDRAG:
                 dragItem.current = action.item
                 todoList[action.list].splice(action.index, 1)
+                localStorage.setItem('todoList', JSON.stringify(todoList))
+                return todoList
+            case KEY_ONDROP:
+                tmp = todoList[action.list]
+                if (dragItem.current !== null && dragItem.current !== undefined) {
+                    tmp.push(dragItem.current)
+                }
+                newState = {...todoList, [action.list]: tmp}
                 break
-            case 'onDrop':
-                todoList[action.list].push(dragItem.current)
-                break
-            case 'add':
+            case KEY_ADD:
                 const newItem = action.input.value.trim()
+                tmp = todoList[action.list]
                 if (newItem !== '') {
-                    todoList[action.list].push(newItem)
+                    tmp.push(newItem)
                     action.input.value = ''
                 }
+                newState = {...todoList, [action.list]: tmp}
                 break
-            case 'rem':
-                todoList[action.list].splice(action.index, 1)
+            case KEY_REMOVE:
+                tmp = todoList[action.list]
+                tmp.splice(action.index, 1)
+                newState = {...todoList, [action.list]: tmp}
                 break
             default:
-                throw new Error()
+                return todoList
         }
-        localStorage.setItem('todoList', JSON.stringify(todoList))
-        return todoList
+        localStorage.setItem('todoList', JSON.stringify(newState))
+        return newState
     }
 
     console.table(todoList)
