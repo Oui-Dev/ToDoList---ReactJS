@@ -1,6 +1,6 @@
 import './Home.scss'
 import {useRef, useEffect, useReducer} from 'react'
-let isStarting = true
+
 const initialState = {todo: [], doing: [], done: []}
 const KEY_SET = 'KEY_SET',
     KEY_ONDRAG = 'KEY_ONDRAG',
@@ -14,14 +14,11 @@ export default function Home() {
     const [todoList, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        if (isStarting) {
-            isStarting = false
-            if (localStorage.getItem('todoList')) {
-                const data = JSON.parse(localStorage.getItem('todoList'))
-                dispatch({type: 'set', data: data})
-            }
+        if (localStorage.getItem('todoList')) {
+            const data = JSON.parse(localStorage.getItem('todoList'))
+            dispatch({type: KEY_SET, data})
         }
-    })
+    }, [])
 
     function reducer(todoList, action) {
         let tmp, newState
@@ -62,8 +59,6 @@ export default function Home() {
         return newState
     }
 
-    console.table(todoList)
-
     function onDragOver(e) {
         e.preventDefault()
     }
@@ -74,20 +69,17 @@ export default function Home() {
                 <h3>{title}</h3>
                 <div
                     className="flex-grow"
-                    onDrop={() => dispatch({type: 'onDrop', list: list})}
+                    onDrop={() => dispatch({type: KEY_ONDROP, list})}
                     onDragOver={(e) => onDragOver(e)}>
                     {todoList[list] &&
                         todoList[list].map((item, index) => (
                             <div
                                 className="item"
-                                onDragStart={() => dispatch({type: 'onDrag', list: list, index: index, item: item})}
+                                onDragStart={() => dispatch({type: KEY_ONDRAG, list, index, item})}
                                 key={index}
                                 draggable>
                                 {item}
-                                <i
-                                    className="bx bx-trash"
-                                    onClick={() => dispatch({type: 'rem', list: list, index: index})}
-                                />
+                                <i className="bx bx-trash" onClick={() => dispatch({type: KEY_REMOVE, list, index})} />
                             </div>
                         ))}
                 </div>
@@ -95,7 +87,7 @@ export default function Home() {
                     <input type="text"></input>
                     <i
                         className="bx bx-plus"
-                        onClick={(e) => dispatch({type: 'add', list: list, input: e.target.previousElementSibling})}
+                        onClick={(e) => dispatch({type: KEY_ADD, list, input: e.target.previousElementSibling})}
                     />
                 </div>
             </div>
